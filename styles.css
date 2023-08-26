@@ -3,3 +3,17 @@
   margin: 0;
   box-sizing: border-box;
 }
+
+
+main {
+  margin: 50px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+button, h2 {
+  margin: 3px;
+  align-items: center;
+} 

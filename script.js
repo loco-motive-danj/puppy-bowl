@@ -1,6 +1,6 @@
 // Use the API_URL variable to make fetch requests to the API.
 // Replace the placeholder with your cohort name (ex: 2109-UNF-HY-WEB-PT)
-const cohortName = "YOUR COHORT NAME HERE";
+const cohortName = "2307-fsa-et-web-sf";
 const API_URL = `https://fsa-puppy-bowl.herokuapp.com/api/${cohortName}`;
 
 /**
@@ -10,11 +10,13 @@ const API_URL = `https://fsa-puppy-bowl.herokuapp.com/api/${cohortName}`;
 const fetchAllPlayers = async () => {
   try {
     // TODO
+    const response = await fetch("https://fsa-puppy-bowl.herokuapp.com/api/${cohortName}/players");
+    const data = await response.json() 
+    return data.data.players
   } catch (err) {
     console.error("Uh oh, trouble fetching players!", err);
   }
 };
-
 /**
  * Fetches a single player from the API.
  * @param {number} playerId
@@ -23,11 +25,14 @@ const fetchAllPlayers = async () => {
 const fetchSinglePlayer = async (playerId) => {
   try {
     // TODO
+    const response = await fetch("https://fsa-puppy-bowl.herokuapp.com/api/${cohortName}/players" + "/" + playerId);
+    const data = await response.json()
+    return data.data.player
   } catch (err) {
     console.error(`Oh no, trouble fetching player #${playerId}!`, err);
   }
 };
-
+// fetchSinglePlayer(155);
 /**
  * Updates `<main>` to display a list of all players.
  *
@@ -47,10 +52,83 @@ const fetchSinglePlayer = async (playerId) => {
  * Note: this function should replace the current contents of `<main>`, not append to it.
  * @param {Object[]} playerList - an array of player objects
  */
+function createElement(objectt){
+  this.element = document.createElement('div');
+  // this.element.style.padding = "10px";
+  const button1 = document.createElement('button');
+  button1.innerHTML = "see details";
+  const button2 = document.createElement('button');
+  button2.innerHTML = "remove player";
+  const name = document.createElement('h1');
+  name.innerHTML = objectt.name;
+  const id = document.createElement('h2');
+  id.classList.add("id")
+  id.innerHTML = objectt.id;
+  const imgg = document.createElement('img')
+  imgg.src = objectt.imageUrl;
+  imgg.alt = 'image of: ' + objectt.name
+  imgg.style.width = '100%';
+  imgg.style.height = '200px';
+  this.element.appendChild(name);
+  this.element.appendChild(imgg);
+  this.element.appendChild(id);
+  this.element.appendChild(button1);
+  this.element.appendChild(button2);
+  document.querySelector('main').appendChild(this.element);
+  button1.addEventListener("click", ()=>{
+  renderSinglePlayer(objectt.id);
+  });
+  button2.addEventListener("click", goodbyeDog)
+
+}
+
+const goodbyeDog = (e) => {
+  const goodbyeDog = e.target.parentNode;
+  goodbyeDog.innerText = ""
+}
+
 const renderAllPlayers = (playerList) => {
   // TODO
-};
-
+  document.querySelector('main').innerHTML=""
+  fetchAllPlayers().then(response => {
+    response.forEach(i=>{
+        createElement(i)
+      });
+  });
+}
+    
+function createElement2(player){
+      this.element = document.createElement('div');
+      const button = document.createElement('button');
+      button.innerHTML = "back to all players"
+      const name1 = document.createElement('h1');
+      name1.innerHTML = player.name;
+      const id = document.createElement('h2');
+      id.innerHTML = player.id;
+      const breed = document.createElement('h2');
+      breed.innerHTML = player.breed;
+      const team = document.createElement('h3');
+      if(player.team.name != 0){
+      team.innerHTML = "Team name: " + player.team.name;
+      }
+      const imgg = document.createElement('img');
+      this.element.style.justifyContent = "center";
+      this.element.style.alignContent = "center";
+      this.element.style.marginLeft = "320px";
+      imgg.src = player.imageUrl;
+      imgg.alt = 'image of: ' + player.name
+      imgg.style.width = '600px';
+      imgg.style.height = '600px';
+      this.element.appendChild(name1);
+      this.element.appendChild(id);
+      this.element.appendChild(breed);
+      this.element.appendChild(imgg);
+      this.element.appendChild(button);
+      this.element.appendChild(team);
+      document.querySelector('main').appendChild(this.element);
+      button.addEventListener("click", renderAllPlayers);
+  
+}
 /**
  * Updates `<main>` to display a single player.
  * The player is displayed in a card with the following information:
@@ -64,8 +142,13 @@ const renderAllPlayers = (playerList) => {
  * will call `renderAllPlayers` to re-render the full list of players.
  * @param {Object} player an object representing a single player
  */
-const renderSinglePlayer = (player) => {
+const renderSinglePlayer = (playerId) => {
   // TODO
+  document.querySelector('main').innerHTML= ""
+  fetchSinglePlayer(playerId).then(player=>{
+      createElement2(player);
+  })
+
 };
 
 /**
